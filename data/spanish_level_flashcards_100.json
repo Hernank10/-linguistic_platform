@@ -1,0 +1,18 @@
+{
+  "flashcards": [
+    {
+      "id": 1,
+      "term": "Fonema",
+      "definition": "Unidad mínima de sonido que puede distinguir significados",
+      "example": "/p/ y /b/ en 'pala' vs 'bala'",
+      "category": "Fonología"
+    },
+    {
+      "id": 2,
+      "term": "Morfema",
+      "definition": "Unidad mínima de significado",
+      "example": "En 'gatos': 'gat' (lexema) + 'o' (género) + 's' (número)",
+      "category": "Morfología"
+    }
+  ]
+}

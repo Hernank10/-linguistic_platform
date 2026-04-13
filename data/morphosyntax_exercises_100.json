@@ -1,0 +1,27 @@
+{
+  "exercises": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "topic": "Fonología",
+      "difficulty": "easy",
+      "question": "¿Cuál es la definición correcta de 'fonema'?",
+      "options": [
+        "Unidad mínima de sonido que puede cambiar el significado",
+        "Letra del alfabeto",
+        "Sílaba tónica",
+        "Sonido de la naturaleza"
+      ],
+      "correct": 0,
+      "explanation": "El fonema es la unidad mínima de sonido que puede distinguir significados"
+    },
+    {
+      "id": 2,
+      "type": "fill_blank",
+      "topic": "Morfología",
+      "question": "El ______ es la parte de la palabra que contiene el significado principal.",
+      "correct": "lexema",
+      "options": ["lexema", "morfema", "sufijo", "prefijo"]
+    }
+  ]
+}

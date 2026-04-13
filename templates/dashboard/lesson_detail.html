@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ lesson.title }} - {{ lesson.course.title }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <!-- Teoría HTML -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5><i class="bi bi-file-text"></i> Material Teórico</h5>
+            </div>
+            <div class="card-body">
+                {% for reading in readings %}
+                    <div class="reading-material">
+                        {{ reading.html_template|safe }}
+                    </div>
+                {% empty %}
+                    <p class="text-muted">No hay material de lectura disponible.</p>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Ejercicios -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5><i class="bi bi-pencil"></i> Ejercicios Prácticos</h5>
+            </div>
+            <div class="card-body">
+                {% for exercise in exercises %}
+                <div class="exercise-item mb-4 p-3 border rounded">
+                    <h6>{{ exercise.title }}</h6>
+                    <p>Tipo: {{ exercise.get_type_display }} | Puntos: {{ exercise.points }}</p>
+                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#exercise{{ exercise.id }}">
+                        Realizar Ejercicio
+                    </button>
+                    <div id="exercise{{ exercise.id }}" class="collapse mt-3">
+                        <form method="post" action="{% url 'exercises:submit' exercise.id %}">
+                            {% csrf_token %}
+                            {% if exercise.type == 'multiple_choice' %}
+                                {% for option in exercise.data.options %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="answer" value="{{ option }}">
+                                    <label class="form-check-label">{{ option }}</label>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary mt-2">Enviar Respuesta</button>
+                        </form>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted">No hay ejercicios disponibles.</p>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Evaluaciones -->
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5><i class="bi bi-clipboard-check"></i> Evaluaciones</h5>
+            </div>
+            <div class="card-body">
+                {% for evaluation in evaluations %}
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h6>{{ evaluation.title }}</h6>
+                        <small>Tiempo límite: {{ evaluation.time_limit_minutes }} min | Nota mínima: {{ evaluation.passing_score }}%</small>
+                    </div>
+                    <a href="{% url 'dashboard:take_evaluation' evaluation.id %}" class="btn btn-primary">Comenzar Evaluación</a>
+                </div>
+                {% empty %}
+                <p class="text-muted">No hay evaluaciones disponibles.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <!-- Flashcards -->
+        <div class="card sticky-top" style="top: 20px;">
+            <div class="card-header bg-info text-white">
+                <h5><i class="bi bi-card-list"></i> Flashcards</h5>
+            </div>
+            <div class="card-body">
+                <div id="flashcard-container">
+                    {% for set in flashcard_sets %}
+                        <h6>{{ set.title }}</h6>
+                        <div class="flashcard-preview">
+                            <div class="alert alert-light">
+                                <small>{{ set.flashcards.count }} tarjetas disponibles</small>
+                            </div>
+                            <a href="{% url 'flashcards:practice' set.id %}" class="btn btn-outline-info w-100">
+                                <i class="bi bi-play"></i> Practicar Flashcards
+                            </a>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted">No hay flashcards disponibles.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Progreso -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5><i class="bi bi-graph-up"></i> Tu Progreso</h5>
+            </div>
+            <div class="card-body text-center">
+                <div class="display-4">{{ progress|floatformat:0 }}%</div>
+                <div class="progress mt-2" style="height: 10px;">
+                    <div class="progress-bar bg-success" style="width: {{ progress }}%"></div>
+                </div>
+                <p class="mt-2">
+                    <strong>{{ completed_count }}/{{ total_count }}</strong> lecciones completadas
+                </p>
+                
+                {% if not is_completed and not is_completed == None %}
+                <form method="post" action="{% url 'dashboard:complete_lesson' lesson.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle"></i> Marcar como Completada
+                    </button>
+                </form>
+                {% elif is_completed %}
+                <div class="alert alert-success">
+                    <i class="bi bi-trophy"></i> ¡Lección Completada!
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

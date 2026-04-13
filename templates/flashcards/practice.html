@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Practicando Flashcards - {{ flashcard_set.title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white text-center">
+                <h4>{{ flashcard_set.title }}</h4>
+                <p>Progreso: {{ current_index }}/{{ total }} flashcards</p>
+            </div>
+            <div class="card-body text-center">
+                <div class="flashcard" style="min-height: 300px;">
+                    {% if show_answer %}
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h3 class="text-success">Definición:</h3>
+                                <p class="lead">{{ current_flashcard.definition }}</p>
+                                {% if current_flashcard.example %}
+                                <hr>
+                                <h5>Ejemplo:</h5>
+                                <p>{{ current_flashcard.example }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="card bg-info text-white">
+                            <div class="card-body">
+                                <h3 class="display-6">{{ current_flashcard.term }}</h3>
+                                <p class="mt-4">Haz clic en "Mostrar Respuesta" para ver la definición</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mt-4">
+                    {% if not show_answer %}
+                        <a href="?show_answer=1" class="btn btn-primary btn-lg">
+                            <i class="bi bi-eye"></i> Mostrar Respuesta
+                        </a>
+                    {% else %}
+                        <div class="btn-group">
+                            <a href="?mastered=true" class="btn btn-success btn-lg">
+                                <i class="bi bi-check-lg"></i> ¡Dominada!
+                            </a>
+                            <a href="?mastered=false" class="btn btn-danger btn-lg">
+                                <i class="bi bi-arrow-repeat"></i> Repetir
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-footer text-muted text-center">
+                <small>Flashcard {{ current_index }} de {{ total }}</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6 mx-auto">
+        <div class="progress" style="height: 20px;">
+            <div class="progress-bar bg-success" role="progressbar" 
+                 style="width: {{ progress_percentage }}%" 
+                 aria-valuenow="{{ progress_percentage }}" 
+                 aria-valuemin="0" aria-valuemax="100">
+                {{ mastered_count }}/{{ total }} dominadas
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

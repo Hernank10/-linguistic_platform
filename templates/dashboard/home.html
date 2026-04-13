@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Lingüística{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-star-fill"></i> Puntos Totales</h5>
+                <h2 class="display-4">{{ total_points }}</h2>
+                <p class="card-text">Nivel {{ user.level }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-check-circle-fill"></i> Ejercicios Completados</h5>
+                <h2 class="display-4">{{ completed_exercises }}</h2>
+                <p class="card-text">¡Sigue así!</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-card-list"></i> Flashcards Dominadas</h5>
+                <h2 class="display-4">{{ mastered_flashcards }}</h2>
+                <p class="card-text">/ 60</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-book"></i> Mis Cursos</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for enrollment in recent_courses %}
+                    <a href="{% url 'dashboard:course_detail' enrollment.course.id %}" class="list-group-item list-group-item-action">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">{{ enrollment.course.title }}</h6>
+                                <small class="text-muted">Progreso: {{ enrollment.progress_percentage|default:0 }}%</small>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">{{ enrollment.completed_lessons.count }}/{{ enrollment.course.lessons.count }}</span>
+                        </div>
+                        <div class="progress mt-2" style="height: 5px;">
+                            <div class="progress-bar" style="width: {{ enrollment.progress_percentage|default:0 }}%"></div>
+                        </div>
+                    </a>
+                    {% empty %}
+                    <p class="text-muted">No estás inscrito en ningún curso aún.</p>
+                    <a href="{% url 'courses:list' %}" class="btn btn-primary">Explorar Cursos</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-trophy"></i> Logros Recientes</h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <i class="bi bi-award display-1 text-warning"></i>
+                    <p class="mt-2">¡Completa más lecciones para desbloquear logros!</p>
+                </div>
+            </div>
+        </div>
+        
+        {% if user.role == 'teacher' %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5><i class="bi bi-chalkboard"></i> Panel de Profesor</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Cursos que enseñas:</strong> {{ courses_teaching|length }}</p>
+                <p><strong>Total estudiantes:</strong> {{ total_students }}</p>
+                <a href="{% url 'dashboard:admin_create_course' %}" class="btn btn-success w-100 mb-2">
+                    <i class="bi bi-plus-circle"></i> Crear Curso
+                </a>
+                <a href="/admin/" class="btn btn-outline-primary w-100">
+                    <i class="bi bi-gear"></i> Panel Administrativo
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
