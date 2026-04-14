@@ -1,12 +1,13 @@
-import os
 from pathlib import Path
+import sys
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-your-secret-key-here'
+# Agregar apps/ al path para que Django encuentre las apps
+sys.path.insert(0, str(BASE_DIR / 'apps'))
 
+SECRET_KEY = 'django-insecure-test-key-2024'
 DEBUG = True
-
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
@@ -16,18 +17,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Third party
-    'crispy_forms',
-    'crispy_bootstrap5',
-    'rest_framework',
-    'import_export',
-    # Local apps
-    'apps.accounts',
-    'apps.courses',
-    'apps.exercises',
-    'apps.flashcards',
-    'apps.dashboard',
+    'accounts',
+    'courses',
+    'exercises',
+    'flashcards',
+    'dashboard',
 ]
+
+AUTH_USER_MODEL = 'accounts.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -41,24 +38,19 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'linguistic_platform.urls'
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
+TEMPLATES = [{
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'DIRS': [BASE_DIR / 'templates'],
+    'APP_DIRS': True,
+    'OPTIONS': {
+        'context_processors': [
+            'django.template.context_processors.debug',
+            'django.template.context_processors.request',
+            'django.contrib.auth.context_processors.auth',
+            'django.contrib.messages.context_processors.messages',
+        ],
     },
-]
-
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
+}]
 
 DATABASES = {
     'default': {
@@ -67,11 +59,10 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = 'accounts.User'
-
-LOGIN_URL = 'accounts:login'
-LOGIN_REDIRECT_URL = 'dashboard:home'
-LOGOUT_REDIRECT_URL = 'accounts:login'
+LANGUAGE_CODE = 'es-es'
+TIME_ZONE = 'America/Bogota'
+USE_I18N = True
+USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
@@ -79,3 +70,7 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL = 'accounts:login'
+LOGIN_REDIRECT_URL = 'dashboard:home'
+LOGOUT_REDIRECT_URL = 'accounts:login'

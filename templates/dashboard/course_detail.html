@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h1>Curso #{{ course_id }}</h1>
+    <p>Detalles del curso aquí.</p>
+    <a href="{% url 'dashboard:home' %}" class="btn btn-primary">Volver al Dashboard</a>
+</div>
+{% endblock %}
